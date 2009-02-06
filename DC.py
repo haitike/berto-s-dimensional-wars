@@ -1,5 +1,4 @@
-#  .:DieCast::
-#  Author: echo85
+#  Authors: echo85, haitike
 #
 #  GPL
 #
@@ -21,9 +20,22 @@
 #     may be removed if I re-factor this project to better comply
 #     with accepted programming practices.
 
+"""
+Contact info:
+haitike@gmail.com
+"""
+
 import pygame
 import Game,Map,Units,Diety,random
 from common import *
+from gettext import gettext as _
+
+try:
+	import psyco
+	psyco.profile()
+	print _("Psyco... OK")
+except ImportError:
+	print _("Nicotine supports \"psyco\", an inline optimizer for python code, you can get it at http://sourceforge.net/projects/psyco/")
 
 HELPTEXT = open('README.txt','r').read()
 
@@ -55,14 +67,14 @@ class Level(Battle):
                 Battle.__init__(self,game,self.title,self.player_race,self.computer_race)
 
 class Level1(Level):
-        title = "crowsbridge"
-        player_race = "Puritan"
-        computer_race = "Heretic"
-        desc = """Your quest begins in a tranquil Puritan settlement.
+        title = _("crowsbridge")
+        player_race = _("Puritan")
+        computer_race = _("Heretic")
+        desc = _("""Your quest begins in a tranquil Puritan settlement.
 Use the provided task force to save the town from the
 Heretic foces who march from the bridge
 and beware what may be hiding in the river bed.
-!gun.gif"""
+!gun.gif""")
           
         def clean(self):
           Battle.clean(self)
@@ -71,16 +83,16 @@ and beware what may be hiding in the river bed.
                 self.L[5][11].p("A vampire springs from the riverbed!")
                 
 class Level2(Level):
-        title = "thicket"
-        player_race = "Sylvan"
-        computer_race = "Bedlam"
-        desc = """When the Puritan elders become aware of the attack,
+        title = _("thicket")
+        player_race = _("Sylvan")
+        computer_race = _("Bedlam")
+        desc = _("""When the Puritan elders become aware of the attack,
 they activate a distant beacon intended to warn their ancient Sylvan
 allies. The Sylvan awaken and acknowledge the warning but its signal
 also attracts the attention of some nearby pirates, known as the
 Bedlam. Protect the beacon from these riff-raff.
 
-!ranger.gif"""
+!ranger.gif""")
         def __init__(self,game):
           Level.__init__(self,game)
           TREASURE = [win('Bedlam')]
@@ -89,16 +101,16 @@ Bedlam. Protect the beacon from these riff-raff.
 
 class Level3(Level):
         ai_no_chop = True
-        title = "jailbreak"
-        player_race = "Dwarven"
-        computer_race = "Heretic"
-        desc = """Elsewhere in the world, three members of a gnomish clan named
+        title = _("jailbreak")
+        player_race = _("Dwarven")
+        computer_race = _("Heretic")
+        desc = _("""Elsewhere in the world, three members of a gnomish clan named
 the Terse sneak to rescue their people from enslavement in a
 Heretic concentration camp. It becomes all too apparent to them
 that the Heretic have hired or otherwise persuaded the
 allegiance of the Bedlam.
 
-!ooger_halfling.gif"""
+!ooger_halfling.gif""")
 
         def __init__(self,game):
           Level.__init__(self,game)
@@ -107,15 +119,15 @@ allegiance of the Bedlam.
           self.init_ai_memory()
 
 class Level4(Level):
-        title="desertstorm"
-        player_race = "Bedouin"
-        computer_race = "Bedlam"
-        desc = """Despite their new found ally, the Bedlam explorations have
+        title=_("desertstorm")
+        player_race = _("Bedouin")
+        computer_race = _("Bedlam")
+        desc = _("""Despite their new found ally, the Bedlam explorations have
 ventured too far from home into a vast desert hosted by the Bedouin.
-"""
+""")
 
 class DCGame(Game.Game):
-        "Die Cast Game"
+        "DieCast Game"
         winstyle=0
         map = None
         text_box_left = 595
@@ -167,7 +179,7 @@ class DCGame(Game.Game):
         def play(self):
           while 1:
             self.menu_mode()
-            main_options = ['Campaigns','Load Custom Map','Help','Quit .:DieCast::']
+            main_options = [_('Campaigns'),_('Load Custom Map'),_('Help'),_('Quit .:DieCast::')]
             y = 2
             while y > 1:
               self.cls()
@@ -189,13 +201,13 @@ class DCGame(Game.Game):
           self.cls()
 
           while 1:
-            f = self.input_text("   To what land dost thou venture: ")
+            f = self.input_text(_("   To what land dost thou venture: "))
             if not f: return
             if os.path.exists(os.path.join('data','maps',f+'.map.csv')):
               break
             else:
               self.cls()
-              self.text_line("There exists no such land.",1)
+              self.text_line(_("There exists no such land."),1)
           
           self.cls()
           cursor = self.text_picture('bowman_and_archer.gif')
@@ -204,7 +216,7 @@ class DCGame(Game.Game):
           
           self.cls()
           cursor = self.text_picture('goblin_ball.gif')
-          cursor = self.text_line("Choose enemy race:", cursor)
+          cursor = self.text_line(_("Choose enemy race:"), cursor)
           computer_race = self.menu(Diety.RACE,cursor)
 
           self.map = Battle(self,f,Diety.RACE[human_race],Diety.RACE[computer_race])
@@ -217,17 +229,17 @@ class DCGame(Game.Game):
           if saved_games:
             self.cls()
             cursor = self.text_picture('scroll.gif')
-            cursor = self.text_line("^   Come hither and choose thy name: ",cursor)
-            y = self.menu(saved_games+[' (NEW DIE CASTER)'],cursor)
+            cursor = self.text_line(_("^   Come hither and choose thy name: "),cursor)
+            y = self.menu(saved_games+[_(' (NEW DIE CASTER)')],cursor)
           if y < len(saved_games):
             player_name = saved_games[y]
           elif y < 6:
             self.cls()
-            cursor = self.text_line("^New Player")
+            cursor = self.text_line(_("^New Player"))
             cursor = self.text_picture('soldierplan.gif',cursor)
-            cursor = self.text_line("^Good morrow, Commander. I'll need your name for",cursor)
-            cursor = self.text_line("^our records, should you perish in battle.",cursor)
-            player_name = self.input_text("   I pray thee, sign thy name here: ",cursor)
+            cursor = self.text_line(_("^Good morrow, Commander. I'll need your name for"),cursor)
+            cursor = self.text_line(_("^our records, should you perish in battle."),cursor)
+            player_name = self.input_text(_("   I pray thee, sign thy name here: "),cursor)
             if not player_name: return
           
           f = os.path.join('save',player_name+'.save')
@@ -240,10 +252,10 @@ class DCGame(Game.Game):
           while 1:
             self.cls()
             cursor = self.text_picture('goblin_ball.gif')
-            cursor = self.text_line('^   Choose a level to play:',cursor)
-            level = self.menu([m.title for i,m in enumerate(MAPS) if i <= level_max]+['QUIT GAME'],cursor)
+            cursor = self.text_line(_('^   Choose a level to play:'),cursor)
+            level = self.menu([m.title for i,m in enumerate(MAPS) if i <= level_max]+[_('QUIT GAME')],cursor)
             if level > level_max:
-              print "All levels completed."
+              print _("All levels completed.")
               self.quit()
             self.map = MAPS[level](self)
             self.text_pages("^"+self.map.title.upper()+"\n"+self.map.desc)
@@ -259,10 +271,10 @@ class DCGame(Game.Game):
                 cursor = self.text_line("You are victorious!",cursor)
                 if level == level_max and level_max < len(MAPS)-1:
                   level_max += 1
-                  cursor = self.text_line("Next level, %s is unlocked!"%MAPS[level_max].title,cursor)
+                  cursor = self.text_line(_("Next level, %s is unlocked!")%MAPS[level_max].title,cursor)
                   open(f,'w').write('%s'%level_max)
-                cursor = self.text_line('You won on turn %s.'%self.map.day,cursor)
-                self.text_line('You had %s units remaining.'%self.map.unit_count[self.map.player_race],cursor)
+                cursor = self.text_line(_('You won on turn %s.')%self.map.day,cursor)
+                self.text_line(_('You had %s units remaining.')%self.map.unit_count[self.map.player_race],cursor)
                 self.wait_for_key()
                 self.stop_music()
               else:
