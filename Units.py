@@ -1,5 +1,4 @@
-#  .:DieCast::
-#  Author: echo85
+#  Author: echo85, haitike
 #
 #  GPL
 #
@@ -204,7 +203,8 @@ class Unit(Movable):
         
         def post_attack(self):
           "called after an attack"
-          self.done()
+	  self.mov -= 3
+          #self.done()
         
         def dodge(self,miss):
           if not miss:

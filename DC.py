@@ -29,6 +29,9 @@ import pygame
 import Game,Map,Units,Diety,random
 from common import *
 from gettext import gettext as _
+import gettext
+gettext.textdomain("DC")
+gettext.bindtextdomain("DC", "./locale/")
 
 try:
 	import psyco
@@ -134,7 +137,6 @@ class DCGame(Game.Game):
         text_box_width = 190
         text_box_top = 400
         text_box_height = 178
-        
         def menu_mode(self):
                 self.color = RUST
                 self.bgcolor = WHITE
