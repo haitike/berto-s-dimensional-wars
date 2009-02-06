@@ -97,10 +97,10 @@ class Movable(Tile):
           self.map(self.x,self.y).draw()
           self.x = x
           self.y = y
-
+	  
           self.draw()
           pygame.display.flip()
-    
+	
 
 class Unit(Movable):
         "A Movable which is controlled by one of the players."
@@ -128,7 +128,7 @@ class Unit(Movable):
                 self.done()
             # reorient self
             self.eva = self.__class__.eva
-            
+	
         def trmsg(self,msg):
             return msg.replace("$N",self.name).replace("$T","%s"%g(self.target,"name"))
         
@@ -166,6 +166,8 @@ class Unit(Movable):
             self.pick()
           elif self.target_is_enemy():
             self.attack()
+	  if self.mov < 1:
+	    self.done()
             
         def target_is_enemy(self):
             return self.target.__class__.race and self.target.__class__.race != self.race        
@@ -204,6 +206,9 @@ class Unit(Movable):
         def post_attack(self):
           "called after an attack"
 	  self.mov -= 3
+	  if self.mov < 1:
+	    self.done()
+	    
           #self.done()
         
         def dodge(self,miss):

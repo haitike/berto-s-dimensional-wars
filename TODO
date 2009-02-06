@@ -1,0 +1,4 @@
+-reorganize and comment code.
+-new attributes in data/units.cvs (Action Points per attack) and conditionals and modifications in the code.
+-Better organization of "autopass" (look in Units.py the move function at line 169 and post-attack in line 206)
+-Create a common template.pot (not now, in future)

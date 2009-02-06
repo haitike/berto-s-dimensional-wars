@@ -1,0 +1,5 @@
+Haitike SandBox
+
+I'm trying to make an "Action Points Turn-Based Game" (Fallout 1/2 combats and Tactics Style) with Python/Pygame.
+
+I have reused the Diecast code (http://www.pygame.org/project/792/) for testing and learning purposes. I expect to create my own code in the future.
